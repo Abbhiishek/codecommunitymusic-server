@@ -96,6 +96,7 @@ class JWTAuthenticationMiddleware:
         '/getallprojects',
         '/user/forgetpassword',
         '/user/changepassword',
+        '/static/admin',
         # Add other paths that don't require JWT token verification
     ]
 
