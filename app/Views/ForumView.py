@@ -27,7 +27,7 @@ def forum(request , slug=None):
                 return JsonResponse({'message': f'Forum not found with the id {discussion_id}'}, status=status.HTTP_404_NOT_FOUND)
 
         else:
-            discussions = Forum.objects.all()
+            discussions = Forum.objects.all().order_by('-created_at')
             serializer = ForumSerializer(discussions, many=True)
             return JsonResponse({
                     'data': serializer.data,
@@ -55,7 +55,7 @@ def forum(request , slug=None):
                 print(logged_in_user.username)
                 if discussion.author.username == logged_in_user.username:
                     serializer = UpdateForumserializer(
-                        discussion, data=request.data)
+                        discussion, data=request.data , partial=True)
                     if serializer.is_valid():
                         serializer.save()
                         return JsonResponse({
@@ -84,3 +84,27 @@ def forum(request , slug=None):
                 return JsonResponse({'message': f'Discussions not found with the id {discussion_id}'}, status=status.HTTP_404_NOT_FOUND)
         else:
             return JsonResponse({'message': 'Please provide the Discussions id'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+
+
+@api_view(['GET'])
+def listForumOfUser(request , username=None):
+    if request.method == 'GET':
+        if username:
+            try:
+                discussions = Forum.objects.filter(author__username=username).order_by('-created_at')
+                serializer = ForumSerializer(discussions, many=True)
+                return JsonResponse({
+                    'data': serializer.data,
+                    'message': 'Forum fetched successfully'
+                }, status=status.HTTP_200_OK)
+            except Forum.DoesNotExist:
+                return JsonResponse({'message': f'Forum not found in user  {username}'}, status=status.HTTP_404_NOT_FOUND)
+
+        else:
+            return JsonResponse({'message': 'Please provide the Discussions id'}, status=status.HTTP_400_BAD_REQUEST)
+        

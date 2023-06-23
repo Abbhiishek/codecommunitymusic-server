@@ -28,7 +28,7 @@ def users(request, username=None):
                 if cached_user is None:
                     user = User.objects.get(username=username)
                     serializer = UserSerializer(user)
-                    cache.set(username, serializer.data, timeout=65)
+                    cache.set(username, serializer.data, timeout=0)
                     endtime = datetime.now()
                     return JsonResponse({
                         "data": serializer.data,
@@ -81,7 +81,7 @@ def getuser(request):
             current_user = get_current_user(session_token)
             serializer = UserSerializer(current_user)
             if current_user:
-                cache.set(session_token, serializer.data, timeout=2)
+                cache.set(session_token, serializer.data, timeout=0)
                 return JsonResponse({'data': serializer.data}, status=status.HTTP_200_OK)
             else:
                 return JsonResponse({'message': 'Invalid token'}, status=status.HTTP_404_NOT_FOUND)
@@ -328,17 +328,17 @@ def followuser(request , username=None):
                 token = request.headers.get('Authorization').split(' ')[1]
                 current_user = get_current_user(token)
                 user = User.objects.get(username=username)
-                if current_user == user:
+                if current_user.username == user.username:
                     return JsonResponse({
                         'message': 'You can not follow yourself ❌',
                         'description': 'You can not follow yourself 👀',
                         'status': 'failed'
                     }, status=status.HTTP_400_BAD_REQUEST)
                 if user:
-                    if user in current_user.following.all():
+                    if current_user.following.filter(username=user.username).exists():
                         current_user.following.remove(user)
                         user.followers.remove(current_user)
-                        user.save()
+                        user.save() 
                         current_user.save()
                         return JsonResponse({
                             'message': 'User unfollowed successfully ✅',

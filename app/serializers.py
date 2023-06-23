@@ -123,3 +123,25 @@ class UpdateChatserializer(serializers.ModelSerializer):
         model = Chat
         # specify the fields to be serialized
         exclude = ['author', 'id', 'upvotes', 'downvotes', 'comments']
+
+
+
+class TodoSerializer(serializers.ModelSerializer):
+    """
+    This class is used to serialize the todo model
+    """
+    class Meta:
+        # specify the model to use
+        model = Todo
+        # specify the fields to be serialized
+        fields = '__all__'
+
+class UpdateTodoSerializer(serializers.ModelSerializer):
+    """
+    This class is used to serialize the todo model
+    """
+    class Meta:
+        # specify the model to use
+        model = Todo
+        # specify the fields to be serialized
+        exclude = ['author']

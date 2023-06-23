@@ -33,3 +33,10 @@ class UserAdmin(admin.ModelAdmin):
                    'is_active', 'is_verified', 'created_at', 'updated_at')
     search_fields = ('username', 'email', 'first_name', 'last_name',
                      'is_active', 'is_verified', 'created_at', 'updated_at')
+
+
+@admin.register(Todo)
+class TodosAdmin(admin.ModelAdmin):
+    list_display = ('todo', 'status', 'created_at', 'updated_at')
+    list_filter = ('todo', 'status', 'created_at', 'updated_at')
+    search_fields = ('todo', 'status', 'created_at', 'updated_at')

@@ -7,10 +7,12 @@ from app.Views.ProjectView import *
 from app.Views.ForumView import *
 from app.Views.LeaderboardView import *
 from app.Views.ChatView import *
+from app.Views.TodoView import *
 
 
 urlpatterns = [
     path('routes', getallavailableroutes, name='Get all available routes'),
+    path('randomprogrammingquote', getrandomprogrammingquote, name='Get random programming quote'),
     
     ## users urls
     path('users/<str:username>', users, name='Get all users'),
@@ -36,8 +38,7 @@ urlpatterns = [
     # projects urls
     path('projects', project, name='projects - GET, POST, PUT, DELETE'),
     path('getallprojects', allprojects, name='all projects - without auth'),
-    path('projects/<str:slug>', project,
-         name='projects - GET, POST, PUT, DELETE'),
+    path('projects/<str:slug>', project, name='projects - GET, POST, PUT, DELETE'),
     path('like/project/<str:slug>', likeproject, name='Like project'),
     path('bookmark/project/<str:slug>', bookmarkproject, name='Bookmark project'),
 
@@ -46,15 +47,20 @@ urlpatterns = [
 
 
 
-     ## forum urls
-     path('forums', forum, name='discussions - GET, POST, PUT, DELETE'),
-     path('forums/<str:slug>', forum,
-         name='discussions - GET, POST, PUT, DELETE'),
+    ## forum urls
+    path('forums', forum, name='discussions - GET, POST, PUT, DELETE'),
+    path('forums/<str:slug>', forum, name='discussions - GET, POST, PUT, DELETE'),
+    ## chat urls
 
-     ## chat urls
-     path('forum/<str:forum_slug>/chat', chat, name='chat - GET , post'),
+    path('forum/<str:forum_slug>/chat', chat, name='chat - GET , post'),
+    path('user/<str:username>/forums', listForumOfUser, name='List forums of user with username'),
 
+    ## todos urls
 
-     ## leaderboard urls
-     path('leaderboard', leaderboard, name='leaderboard - GET'),
+    path('user/<str:username>/todos', gettodo, name='todos - GET , post'),
+    path('user/<str:username>/todos/<str:todo_id>', deletetodo, name='todos - delete'),
+    path('user/<str:username>/todos/<str:todo_id>/update', updatetodo, name='todos - update'),
+
+    ## leaderboard urls
+    path('leaderboard', leaderboard, name='leaderboard - GET'),
 ]

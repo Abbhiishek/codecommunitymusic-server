@@ -13,7 +13,10 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import datetime
 from pathlib import Path
 from datetime import timedelta
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -27,7 +30,7 @@ SECRET_KEY = 'django-insecure-re34$d2k3@j4nq%sge-1_5+3%6dgi76%su1njlv7i#5m%%9ig3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.vercel.app' , 'localhost']
+ALLOWED_HOSTS = ['.vercel.app' , 'localhost' , '127.0.0.1']
 APPEND_SLASH = True
 
 
@@ -64,6 +67,7 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "https://codecommunitymusic.vercel.app",
+    'http://127.0.0.1'
 
 ]
 
@@ -94,14 +98,11 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'codecommunitymusic',
-        'USER': 'postgres',
-        'PASSWORD': 'kushwaha',
-        'HOST': 'localhost',
-        # 'USER': 'kushwaha',
-        # 'PASSWORD': '5Qn6U67MH6IVnUprMwFefT4nBHNh1Ie9',
-        # 'HOST': 'dpg-ci4iijlgkuvm71ep926g-a.singapore-postgres.render.com',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.getenv("DATABASE_NAME"),
+        'USER': os.getenv("DATABASE_USER"),
+        'PASSWORD': os.getenv("DATABASE_PASS"),
+        'HOST': os.getenv("DATABASE_HOST"),
         'PORT': '5432',
     }
 }

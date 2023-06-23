@@ -21,7 +21,7 @@ def allprojects(request, slug=None):
             if cached_project is None:
                 project = Projects.objects.get(slug=slug)
                 serializer = ProjectSerializer(project)
-                cache.set(slug, serializer.data, timeout=65)
+                cache.set(slug, serializer.data, timeout=10)
                 return JsonResponse({
                     "data": serializer.data,
                     "messsage": f'Project found successfully with slug {slug}',
@@ -40,7 +40,7 @@ def allprojects(request, slug=None):
         if cached_projects is None:
             projects = Projects.objects.all()
             serializer = ProjectSerializer(projects, many=True)
-            cache.set('allprojects', serializer.data, timeout=65)
+            cache.set('allprojects', serializer.data, timeout=0)
             return JsonResponse({
                 "data": serializer.data,
                 "message": "success",
@@ -65,7 +65,7 @@ def project(request, slug=None):
                 if cached_project is None:
                     project = Projects.objects.get(slug=slug)
                     serializer = ProjectSerializer(project)
-                    cache.set(slug, serializer.data, timeout=65)
+                    cache.set(slug, serializer.data, timeout=2)
                     return JsonResponse({
                         "data": serializer.data,
                         "messsage": f'Project found successfully with slug {slug}',
@@ -84,7 +84,7 @@ def project(request, slug=None):
             if cached_projects is None:
                 projects = Projects.objects.all()
                 serializer = ProjectSerializer(projects, many=True)
-                cache.set('allprojects', serializer.data, timeout=65)
+                cache.set('allprojects', serializer.data, timeout=0)
                 return JsonResponse({
                     "data": serializer.data,
                     "message": "success",
