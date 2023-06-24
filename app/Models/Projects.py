@@ -29,9 +29,9 @@ class Projects(models.Model):
         User, related_name="project_views", blank=True)
     is_published = models.BooleanField(default=False)
     is_featured = models.BooleanField(default=False)
-    bannerImage = models.CharField(
+    bannerImage = models.TextField(
         blank=True, default="https://t4.ftcdn.net/jpg/03/02/74/89/360_F_302748918_Vs76DTDodjhhkYuCEFahu0LcoDZkBuaW.jpg")
-    mainImage = models.CharField(
+    mainImage = models.TextField(
         blank=True, default="https://t4.ftcdn.net/jpg/03/02/74/89/360_F_302748918_Vs76DTDodjhhkYuCEFahu0LcoDZkBuaW.jpg")
     demoLink = models.URLField(max_length=200, blank=True)
     githubLink = models.URLField(max_length=200, blank=True)

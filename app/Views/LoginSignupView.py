@@ -22,6 +22,7 @@ def createuser(request):
         password = request.data['password']
         hashed_password = make_password(password)
         request.data['password'] = hashed_password
+        request.data['karma'] = 50
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
 
@@ -73,6 +74,9 @@ def login(request):
             Q(username=username) or Q(email=username)).first()
         if user:
             serializer = UserSerializer(user)
+            user.karma += 10
+            user.save()
+            print( "karmn updated to " , user.karma)
             if check_password(password, user.password):
                 session_token = generateJWTToken(
                     username=username, email=user.email)

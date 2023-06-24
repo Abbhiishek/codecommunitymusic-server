@@ -38,9 +38,9 @@ class User(models.Model):
     age = models.IntegerField(default=18)
     phone = models.BigIntegerField(default=0)
     bio = models.TextField(default="I am a new user", auto_created=True)
-    profile_pic = models.CharField(
+    profile_pic = models.TextField(
         default="https://img.freepik.com/premium-vector/anime-guy-beach_24911-70757.jpg")
-    banner_pic = models.CharField(
+    banner_pic = models.TextField(
         default="https://img.freepik.com/free-photo/psychedelic-paper-shapes-with-copy-space_23-2149378246.jpg?w=1800&t=st=1685775473~exp=1685776073~hmac=5f072e26cc9a086a94fa84df41dd56e01ba69cdcbf9efd71891a81e6a9059a11")
 
     followers = models.ManyToManyField(
@@ -49,13 +49,13 @@ class User(models.Model):
         "self", blank=True , related_name="following")
     is_active = models.BooleanField(default=True)
     is_verified = models.BooleanField(default=False)
-    password = models.CharField(max_length=255)
-    github = models.CharField( null=True, blank=True)
-    linkedin = models.CharField( null=True, blank=True)
-    twitter = models.CharField(null=True, blank=True)
-    website = models.CharField( null=True, blank=True)
-    profession = models.CharField( null=True, blank=True)
-    location = models.CharField( null=True, blank=True)
+    password = models.TextField(max_length=255)
+    github = models.TextField( null=True, blank=True)
+    linkedin = models.TextField( null=True, blank=True)
+    twitter = models.TextField(null=True, blank=True)
+    website = models.TextField( null=True, blank=True)
+    profession = models.TextField( null=True, blank=True)
+    location = models.TextField( null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     temp_otp = models.IntegerField(default=0, null=True, blank=True)

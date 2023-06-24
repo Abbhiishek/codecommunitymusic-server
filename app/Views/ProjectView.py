@@ -102,6 +102,7 @@ def project(request, slug=None):
         serializer = ProjectSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
+            logged_in_user.karma += 80
             return JsonResponse({
                 "status": "success",
                 "data": serializer.data,
@@ -183,7 +184,9 @@ def likeproject(request, slug=None):
             if logged_in_user.username in project.upvotes.all().values_list('username', flat=True):
                 print("user has already liked this project")
                 project.upvotes.remove(logged_in_user.username)
+                logged_in_user.karma -= 15
                 project.save()
+                logged_in_user.save()
                 return JsonResponse({
                     'message': 'Unliked the project 😭',
                     "action": "unliked",
@@ -195,6 +198,9 @@ def likeproject(request, slug=None):
                 print("user has not liked this project")
                 project.upvotes.add(logged_in_user.username)
                 project.save()
+                logged_in_user.karma += 15
+                logged_in_user.save()
+                
                 return JsonResponse({
                     'message': 'You have liked this project 😇',
                     "action": "liked",

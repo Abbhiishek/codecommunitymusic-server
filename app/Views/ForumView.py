@@ -40,6 +40,8 @@ def forum(request , slug=None):
         serializer = ForumSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
+            logged_in_user.karma += 100
+            logged_in_user.save()
             return JsonResponse({
                 "data": serializer.data,
                 "message": "Forum created successfully"

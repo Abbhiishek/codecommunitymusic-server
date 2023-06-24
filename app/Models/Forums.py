@@ -21,8 +21,8 @@ class Forum(models.Model):
     upvotes = models.ManyToManyField(
         User, related_name="upvotes", default=None, blank=True)
     tags = ArrayField(models.CharField(max_length=200), default=None, blank=True)
-    type = models.CharField(max_length=200, blank=True , default="Discussion")
-    slug = models.CharField( default=None, blank=True, unique=True , primary_key=True)
+    type = models.TextField(max_length=200, blank=True , default="Discussion")
+    slug = models.TextField( default=None, blank=True, unique=True , primary_key=True)
     is_closed = models.BooleanField(default=False)
     is_solved = models.BooleanField(default=False)
 

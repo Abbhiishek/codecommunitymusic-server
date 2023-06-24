@@ -41,6 +41,8 @@ def chat(request , forum_slug=None , chat_id=None):
         serializer = Chatserializer(data=data)
         if serializer.is_valid():
             serializer.save()
+            logged_in_user.karma += 50
+            logged_in_user.save()
             return JsonResponse({
                 "data": serializer.data,
                 "message": "Chat created successfully"
