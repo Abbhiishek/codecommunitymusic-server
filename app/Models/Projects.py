@@ -27,7 +27,7 @@ class Projects(models.Model):
         User, related_name="project_bookmark", blank=True)
     views = models.ManyToManyField(
         User, related_name="project_views", blank=True)
-    is_published = models.BooleanField(default=False)
+    is_published = models.BooleanField(default=True)
     is_featured = models.BooleanField(default=False)
     bannerImage = models.TextField(
         blank=True, default="https://t4.ftcdn.net/jpg/03/02/74/89/360_F_302748918_Vs76DTDodjhhkYuCEFahu0LcoDZkBuaW.jpg")
