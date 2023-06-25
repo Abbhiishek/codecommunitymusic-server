@@ -31,7 +31,7 @@ SECRET_KEY = 'django-insecure-re34$d2k3@j4nq%sge-1_5+3%6dgi76%su1njlv7i#5m%%9ig3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['.vercel.app' , 'localhost' , '127.0.0.1']
+ALLOWED_HOSTS = ['.vercel.app' , 'localhost' , '127.0.0.1' , 'ccm.dscjisu.in']
 APPEND_SLASH = True
 
 
@@ -68,7 +68,8 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "https://codecommunitymusic.vercel.app",
-    'http://127.0.0.1'
+    'http://127.0.0.1', 
+    "https://ccm.dscjisu.in/"
 
 ]
 
