@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from django.http import JsonResponse
 from app.libs.oauth2 import get_current_user
-from app.serializers import UserSerializer
+from app.serializers import UserSerializer , AllUserSerializer
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
 from django.contrib.auth.hashers import make_password, check_password
 from django.conf import settings
@@ -367,5 +367,21 @@ def followuser(request , username=None):
                 return JsonResponse({'message': f'User not found with the username {username}'}, status=status.HTTP_404_NOT_FOUND)
         else:
             return JsonResponse({'message': 'no username is passed :('}, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return JsonResponse({'message': 'only get is allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    
+
+
+
+
+@api_view(['GET'])
+def getalluserusername(request):
+    if request.method == 'GET':
+        try:
+            users = User.objects.all()
+            serializer = AllUserSerializer(users, many=True)
+            return JsonResponse({'users': serializer.data}, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return JsonResponse({'message': 'No users found'}, status=status.HTTP_404_NOT_FOUND)
     else:
         return JsonResponse({'message': 'only get is allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)

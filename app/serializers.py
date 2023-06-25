@@ -20,6 +20,15 @@ class UserSerializer(serializers.ModelSerializer):
             }
         }
 
+class AllUserSerializer(serializers.ModelSerializer):
+    """
+    This class is used to serialize the user model
+    """
+    class Meta:
+        # specify the model to use
+        model = User
+        # specify the fields to be serialized
+        fields = ['username' , 'display_name' , 'profile_pic' , 'created_at' , 'karma']
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()

@@ -94,6 +94,7 @@ class JWTAuthenticationMiddleware:
         '/routes',
         '/directlogin',
         '/getallprojects',
+        '/getalluserusername',
         '/user/forgetpassword',
         '/user/changepassword',
         '/static/admin',

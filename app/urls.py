@@ -15,6 +15,7 @@ urlpatterns = [
     path('randomprogrammingquote', getrandomprogrammingquote, name='Get random programming quote'),
     
     ## users urls
+    path('getalluserusername' ,  getalluserusername , name='Get all user username'),
     path('users/<str:username>', users, name='Get all users'),
     path('users', users, name='Get all users'),
     path('getuser', getuser, name='Get user by session_token'),
