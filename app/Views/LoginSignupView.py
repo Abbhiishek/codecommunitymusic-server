@@ -45,7 +45,7 @@ def createuser(request):
                     <li>Verify your account to gain access to our full range of features.</li>
                 </ul>
                 <p>Please click on the following link to verify your account:</p>
-                <a href='http://localhost:3000/verify/{serializer.data.get("username")}'>Verify Account</a>
+                <a href='https://codecommunitymusic.vercel.app/verify'>Verify Account</a>
                 <p>We're always looking for new ways to help our members, so please don't hesitate to reach out if you have any questions or suggestions.</p>
                 <p>Thanks for joining CodeCommunity Music!</p>
                 <br>
