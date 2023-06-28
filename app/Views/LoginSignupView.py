@@ -10,7 +10,6 @@ from app.Models.models import User
 from django.core.mail import send_mail
 from core.settings import EMAIL_HOST_USER
 
-
 # local
 
 @api_view(['POST'])
@@ -110,11 +109,11 @@ def directLogin(request):
             return JsonResponse({
                 "message": "User logged in successfully",
                 "status": "success",
-                "time_taken": end_time - start_time,
-                "data": serializer.data,
                 "session_token": session_token
             }, status=status.HTTP_200_OK)
         else:
             return JsonResponse({'message': 'User not found with the Credintials'}, status=status.HTTP_400_BAD_REQUEST)
     else:
         return JsonResponse({'message': 'Invalid request Method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+

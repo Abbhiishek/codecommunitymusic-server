@@ -1,5 +1,7 @@
 from django.contrib import admin
 
+
+
 from .Models.models import *
 
 
@@ -19,10 +21,10 @@ class DiscussionsAdmin(admin.ModelAdmin):
     list_display = ('title', 'created_at', 'author')
 
 
-@admin.register(Chat)
-class ChatsAdmin(admin.ModelAdmin):
-    list_display = ('content', 'created_at', 'author')
-
+@admin.register(Blog)
+class BlogAdmin(admin.ModelAdmin):
+    list_display = ('title', 'created_at', 'author')
+    
 
 
 @admin.register(User)
@@ -35,8 +37,4 @@ class UserAdmin(admin.ModelAdmin):
                      'is_active', 'is_verified', 'created_at', 'updated_at')
 
 
-@admin.register(Todo)
-class TodosAdmin(admin.ModelAdmin):
-    list_display = ('todo', 'status', 'created_at', 'updated_at')
-    list_filter = ('todo', 'status', 'created_at', 'updated_at')
-    search_fields = ('todo', 'status', 'created_at', 'updated_at')
+

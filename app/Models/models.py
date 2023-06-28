@@ -3,3 +3,4 @@ from .Forums import Forum
 from .Projects import Projects
 from .Chats import Chat
 from .Todos import Todo
+from .Blogs import Blog
