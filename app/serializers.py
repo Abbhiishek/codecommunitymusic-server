@@ -77,10 +77,22 @@ class UpdateProjectSerializer(serializers.ModelSerializer):
         exclude = ['author', 'id', 'upvotes', 'downvotes', 'comments']
 
 
+
+class ForumUserSerializer(serializers.ModelSerializer):
+    """
+    This class is used to serialize the forum model
+    """
+    class Meta:
+        # specify the model to use
+        model = User
+        # specify the fields to be serialized
+        fields = ['username', 'display_name', 'profile_pic' , 'created_at' , 'karma']
+
+
 class ForumSerializer(serializers.ModelSerializer):
-    """
-    This class is used to serialize the discussion model
-    """
+
+    upvotes = ForumUserSerializer(many=True)
+    author = ForumUserSerializer()
     class Meta:
         # specify the model to use
         model = Forum
@@ -88,7 +100,48 @@ class ForumSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class UpdateForumserializer(serializers.ModelSerializer):
+class CreateForumSerializer(serializers.ModelSerializer):
+    """
+    This class is used to serialize the forum model
+    """
+    class Meta:
+        # specify the model to use
+        model = Forum
+        # specify the fields to be serialized
+        fields = '__all__'
+
+class ChatSerializer(serializers.ModelSerializer):
+    author = serializers.SerializerMethodField()
+    reply_to = serializers.PrimaryKeyRelatedField(queryset=Chat.objects.all(), required=False)
+    replies = serializers.SerializerMethodField()
+    class Meta:
+
+        model = Chat
+        fields = [ "id", 'content', 'created_at', 'updated_at', 'author', 'reply_to', 'replies']
+
+    def get_author(self, chat):
+        author = chat.author
+        serializer = ForumUserSerializer(author)
+        return serializer.data
+
+    def get_replies(self, chat):
+        replies = chat.replies.all()
+        serializer = ChatSerializer(replies, many=True)
+        return serializer.data
+    
+    
+    
+class CreateChatSerializer(serializers.ModelSerializer):
+    """
+    This class is used to serialize the chat model
+    """
+    class Meta:
+        # specify the model to use
+        model = Chat
+        # specify the fields to be serialized
+        fields = '__all__'
+
+class UpdateForumSerializer(serializers.ModelSerializer):
     """
     This class is used to serialize the discussion model
     """
@@ -96,7 +149,7 @@ class UpdateForumserializer(serializers.ModelSerializer):
         # specify the model to use
         model = Forum
         # specify the fields to be serialized
-        exclude = ['author', ]
+        exclude = ['author', 'slug']
 
 
 
@@ -110,28 +163,6 @@ class LeaderboardSerializer(serializers.ModelSerializer):
         # specify the fields to be serialized
         fields = ['username', 'display_name', 'profile_pic' , 'created_at' , 'karma']
 
-
-
-class Chatserializer(serializers.ModelSerializer):
-    """
-    This class is used to serialize the chat model
-    """
-    class Meta:
-        # specify the model to use
-        model = Chat
-        # specify the fields to be serialized
-        fields = '__all__'
-
-
-class UpdateChatserializer(serializers.ModelSerializer):
-    """
-    This class is used to serialize the chat model
-    """
-    class Meta:
-        # specify the model to use
-        model = Chat
-        # specify the fields to be serialized
-        exclude = ['author', 'id', 'upvotes', 'downvotes', 'comments']
 
 
 
@@ -154,3 +185,36 @@ class UpdateTodoSerializer(serializers.ModelSerializer):
         model = Todo
         # specify the fields to be serialized
         exclude = ['author']
+
+
+
+class BlogUserSerializer(serializers.ModelSerializer):
+    """
+    This class is used to serialize the blog model
+    """
+    class Meta:
+        # specify the model to use
+        model = User
+        # specify the fields to be serialized
+        fields = ['username', 'display_name', 'profile_pic' , 'created_at' , 'karma']
+
+class BlogSerializer(serializers.ModelSerializer):
+
+    appreciators = BlogUserSerializer(many=True)
+    class Meta:
+        model = Blog
+        fields = '__all__'
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    author = serializers.ReadOnlyField(source='author.username')
+    reply_to = serializers.PrimaryKeyRelatedField(queryset=Comment.objects.all(), required=False)
+    replies = serializers.SerializerMethodField()
+    class Meta:
+        model = Comment
+        fields = ['id', 'text', 'created_at', 'updated_at', 'author', 'reply_to', 'replies']
+    
+    def get_replies(self, comment):
+        replies = comment.replies.all()
+        serializer = CommentSerializer(replies, many=True)
+        return serializer.data

@@ -5,12 +5,6 @@ from django.contrib import admin
 from .Models.models import *
 
 
-# admin.site.register(User)
-# admin.site.register(Discussions)
-# admin.site.register(Projects)
-# admin.site.register(Comments)
-
-
 @admin.register(Projects)
 class ProjectsAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'created_at', 'updated_at')
@@ -19,6 +13,11 @@ class ProjectsAdmin(admin.ModelAdmin):
 @admin.register(Forum)
 class DiscussionsAdmin(admin.ModelAdmin):
     list_display = ('title', 'created_at', 'author')
+
+
+@admin.register(Chat)
+class ChatAdmin(admin.ModelAdmin):
+    list_display = ('content', 'created_at', 'author')
 
 
 @admin.register(Blog)
@@ -37,4 +36,6 @@ class UserAdmin(admin.ModelAdmin):
                      'is_active', 'is_verified', 'created_at', 'updated_at')
 
 
-
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('author', 'created_at', 'updated_at')

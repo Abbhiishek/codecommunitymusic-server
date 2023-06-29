@@ -97,6 +97,10 @@ class JWTAuthenticationMiddleware:
         '/getalluserusername',
         '/user/forgetpassword',
         '/user/changepassword',
+        '/blogs',
+        "/list",
+        'user/<str:username>/forums',
+        '/forums',
         '/static/admin',
         # Add other paths that don't require JWT token verification
     ]
@@ -117,19 +121,19 @@ class JWTAuthenticationMiddleware:
         authorization_header = request.headers.get('AUTHORIZATION')
         if authorization_header:
             token_type, token = authorization_header.split(' ')
-            print("-----------------")
-            print(token_type, token)
+            # print("-----------------")
+            # print(token_type, token)
             if token_type.lower() == 'bearer':
                 try:
                     payload = verifyJWTToken(token)
                     if payload == None:
                         return JsonResponse({'message': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
-                    print("payload after encrypting : ", payload)
+                    # print("payload after encrypting : ", payload)
                     loggedinuser = get_current_user(token)
-                    print("Request made by : ", loggedinuser.username)
+                    # print("Request made by : ", loggedinuser.username)
                     currentuser = User.objects.get(
                         username=loggedinuser.username)
-                    print("Current user : ", currentuser.username)
+                    # print("Current user : ", currentuser.username)
                     if not currentuser:
                         return JsonResponse({'message': 'Invalid token'}, status=status.HTTP_401_UNAUTHORIZED)
                     return self.get_response(request)

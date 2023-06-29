@@ -15,43 +15,22 @@ CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
 @api_view(['GET'])
 def allprojects(request, slug=None):
-    if slug:
-        try:
-            cached_project = cache.get(slug)
-            if cached_project is None:
-                project = Projects.objects.get(slug=slug)
-                serializer = ProjectSerializer(project)
-                cache.set(slug, serializer.data, timeout=10)
-                return JsonResponse({
-                    "data": serializer.data,
-                    "messsage": f'Project found successfully with slug {slug}',
-                    "server": "db"
-                }, status=status.HTTP_200_OK)
-            else:
-                return JsonResponse({
-                    "data": cached_project,
-                    "messsage": f'Project found successfully with slug {slug}',
-                    "server": "cache server v2"
-                }, status=status.HTTP_200_OK)
-        except Projects.DoesNotExist:
-            return JsonResponse({'message': f'Project not found with the slug {slug}'}, status=status.HTTP_404_NOT_FOUND)
-    else:  # if the project id is not provided
-        cached_projects = cache.get('allprojects')
-        if cached_projects is None:
-            projects = Projects.objects.all()
-            serializer = ProjectSerializer(projects, many=True)
-            cache.set('allprojects', serializer.data, timeout=0)
-            return JsonResponse({
-                "data": serializer.data,
-                "message": "success",
-                "server": "db"
-            }, status=status.HTTP_200_OK)
-        else:
-            return JsonResponse({
-                "data": cached_projects,
-                "message": "success",
-                "server": "cache server v2"
-            }, status=status.HTTP_200_OK)
+    cached_projects = cache.get('allprojects')
+    if cached_projects is None:
+        projects = Projects.objects.all().order_by('-created_at')
+        serializer = ProjectSerializer(projects, many=True)
+        cache.set('allprojects', serializer.data, timeout=200)
+        return JsonResponse({
+            "data": serializer.data,
+            "message": "success",
+            "server": "db"
+        }, status=status.HTTP_200_OK)
+    else:
+        return JsonResponse({
+            "data": cached_projects,
+            "message": "success",
+            "server": "cache server v2"
+        }, status=status.HTTP_200_OK)
 
 
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
