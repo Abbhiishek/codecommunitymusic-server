@@ -10,7 +10,7 @@ class Blog(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    appreciators = models.ManyToManyField(User, related_name='appreciated_blogs')
+    appreciators = models.ManyToManyField(User, related_name='appreciated_blogs' , blank=True)
     tags = ArrayField(models.CharField(max_length=255), blank=True, null=True)
     is_published = models.BooleanField(default=False)
     is_draft = models.BooleanField(default=True)

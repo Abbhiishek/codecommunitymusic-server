@@ -4,15 +4,15 @@ from django.http import JsonResponse
 from django.db.models import Q
 from rest_framework import status
 from app.Models.models import Blog , Comment
-from app.serializers import BlogSerializer , CommentSerializer
+from app.serializers import BlogSerializer , CommentSerializer , CreateBlogSerializer
 from app.libs.oauth2 import get_current_user
 
 from django.core.cache import cache
 from django.conf import settings
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
-
-
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
+
+
 @api_view(['GET'])
 def get_blog(request, slug=None):
     if slug:
@@ -68,7 +68,7 @@ def create_blog(request):
 
     data = request.data
     data['author'] = logged_in_user.username
-    serializer = BlogSerializer(data=data)
+    serializer = CreateBlogSerializer(data=data)
     if serializer.is_valid():
         serializer.save()
         logged_in_user.karma += 10

@@ -19,7 +19,7 @@ def fetch_all_forums(request):
     if cached_forums is  None:
         forums = Forum.objects.all().order_by('-created_at')
         serializer = ForumSerializer(forums, many=True)
-        cache.set('all_forums', serializer.data, timeout=100)
+        cache.set('all_forums', serializer.data, timeout=CACHE_TTL)
         return JsonResponse({
             'data': serializer.data,
             'message': 'Forums fetched successfully'
@@ -34,23 +34,17 @@ def fetch_all_forums(request):
 @api_view(['GET'])
 def fetch_forum(request, slug):
     try:
-        cached_forum = cache.get(f"forum {slug}")
-        if cached_forum is None:
-            forum = Forum.objects.get(slug=slug)
-            serializer = ForumSerializer(forum)
-            chats = Chat.objects.filter(forum=forum , reply_to=None)
-            chats_serializer = ChatSerializer(chats, many=True)
-            cache.set(f"forum {slug}", serializer.data, timeout=CACHE_TTL)
-            return JsonResponse({
-                "data": serializer.data,
-                "comments": chats_serializer.data,
-                "message": f'Forum found successfully with id {slug}'
-            }, status=status.HTTP_200_OK)
-        else:
-            return JsonResponse({
-                "data": cached_forum,
-                "message": f'Forum found successfully with id {slug}'
-            }, status=status.HTTP_200_OK)
+        forum = Forum.objects.get(slug=slug)
+        serializer = ForumSerializer(forum)
+        chats = Chat.objects.filter(forum=forum , reply_to=None)
+        chats_serializer = ChatSerializer(chats, many=True)
+        cache.set(f"forum {slug}", serializer.data, timeout=CACHE_TTL)
+        cache.set(f"forum {slug} chats", chats_serializer.data, timeout=CACHE_TTL)
+        return JsonResponse({
+            "data": serializer.data,
+            "comments": chats_serializer.data,
+            "message": f'Forum found successfully with id {slug}'
+        }, status=status.HTTP_200_OK)
     except Forum.DoesNotExist:
         return JsonResponse({'message': f'Forum not found with the id {slug}'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -68,6 +62,9 @@ def create_forum(request):
         serializer.save()
         logged_in_user.karma += 10
         logged_in_user.save()
+        new_All_Forums = Forum.objects.all().order_by('-created_at')
+        serializer = ForumSerializer(new_All_Forums, many=True)
+        cache.set('all_forums', serializer.data, timeout=CACHE_TTL)
         return JsonResponse({
             "data": serializer.data,
             "message": "Forum created successfully"
@@ -86,6 +83,12 @@ def update_forum(request, slug):
             serializer = UpdateForumSerializer(discussion, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
+                new_All_Forums = Forum.objects.all().order_by('-created_at')
+                serializer = ForumSerializer(new_All_Forums, many=True)
+                cache.set('all_forums', serializer.data, timeout=CACHE_TTL)
+                new_forum = Forum.objects.get(slug=slug)
+                serializer = ForumSerializer(new_forum)
+                cache.set(f"forum {slug}", serializer.data, timeout=CACHE_TTL)
                 return JsonResponse({
                     "data": serializer.data,
                     "message": f'Forum updated successfully with id {slug}'
@@ -106,6 +109,9 @@ def delete_forum(request, slug):
         discussion = Forum.objects.get(slug=slug)
         if discussion.author.username == logged_in_user.username:
             discussion.delete()
+            new_All_Forums = Forum.objects.all().order_by('-created_at')
+            serializer = ForumSerializer(new_All_Forums, many=True)
+            cache.set('all_forums', serializer.data, timeout=CACHE_TTL)
             return JsonResponse({'message': f'Forum deleted successfully with id {slug}'}, status=status.HTTP_204_NO_CONTENT)
         else:
             return JsonResponse({'message': 'You are not authorized to delete this Forum'}, status=status.HTTP_401_UNAUTHORIZED)

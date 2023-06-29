@@ -62,11 +62,12 @@ urlpatterns = [
     path('user/<str:username>/todos/<str:todo_id>/update', updatetodo, name='todos - update'),
 
     #  blogs urls
-    path('blogs/<str:slug>', get_blog, name='blogs - GET'),
+    path('list/blogs/<str:slug>', get_blog, name='blogs - GET'),
     path('create/blogs', create_blog, name='blogs - Post'),
     path('update/blogs/<str:slug>', update_blog, name='blogs -  PUT'),
     path('delete/blogs/<str:slug>', delete_blog, name='blogs -  DELETE'),
     path('list/<str:username>/blogs', listBlogOfUser, name='blogs -  like'),
+    path('list/blogs', get_blog, name='blogs -  like'),
 
     ## leaderboard urls
     path('leaderboard', leaderboard, name='leaderboard - GET'),
