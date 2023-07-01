@@ -6,6 +6,10 @@ from rest_framework import status
 from app.Models.models import Todo
 from app.serializers import TodoSerializer , UpdateTodoSerializer
 from app.libs.oauth2 import get_current_user
+from django.core.cache import cache
+from django.conf import settings
+from django.core.cache.backends.base import DEFAULT_TIMEOUT
+CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
 
 @api_view(['GET' , 'POST'])
@@ -13,8 +17,15 @@ def gettodo(request , username=None):
     if request.method == 'GET':
         if username:
             try:
+                cached_todo = cache.get(f"todo {username}")
+                if cached_todo is not None:
+                    return JsonResponse({
+                        'data': cached_todo,
+                        'message': f'Todo found successfully with for the user {username}'
+                    }, status=status.HTTP_200_OK)
                 todo = Todo.objects.filter(author__username=username).order_by('-created_at')
                 serializer = TodoSerializer(todo, many=True)
+                cache.set(f"todo {username}", serializer.data, timeout=CACHE_TTL)
                 return JsonResponse({
                     "data": serializer.data,
                     "messsage": f'Todo found successfully with for the user {username}'
@@ -36,6 +47,9 @@ def gettodo(request , username=None):
         serializer = TodoSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
+            todo = Todo.objects.filter(author__username=username).order_by('-created_at')
+            serializer = TodoSerializer(todo, many=True)
+            cache.set(f"todo {username}", serializer.data, timeout=CACHE_TTL)
             return JsonResponse({
                 "data": serializer.data,
                 "message": "Todo created successfully"
@@ -58,6 +72,9 @@ def updatetodo(request, username=None,  todo_id=None):
     serializer = UpdateTodoSerializer(todo, data=data , partial=True)
     if serializer.is_valid():
         serializer.save()
+        todo = Todo.objects.filter(author__username=username).order_by('-created_at')
+        serializer = TodoSerializer(todo, many=True)
+        cache.set(f"todo {username}", serializer.data, timeout=CACHE_TTL)
         return JsonResponse({
             "data": serializer.data,
             "message": "Todo updated successfully"
@@ -75,5 +92,8 @@ def deletetodo(request, username=None, todo_id=None):
         return JsonResponse({'message': f'Todo not found with the id {todo_id}'}, status=status.HTTP_404_NOT_FOUND)
 
     todo.delete()
+    todo = Todo.objects.filter(author__username=username).order_by('-created_at')
+    serializer = TodoSerializer(todo, many=True)
+    cache.set(f"todo {username}", serializer.data, timeout=CACHE_TTL)
     return JsonResponse({'message': 'Todo deleted successfully!'}, status=status.HTTP_204_NO_CONTENT)
 

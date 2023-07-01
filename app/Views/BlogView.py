@@ -19,7 +19,7 @@ def get_blog(request, slug=None):
         cached_data = cache.get(slug)
         if cached_data is None:
             try:
-                blog = Blog.objects.get(slug=slug)
+                blog = Blog.objects.get(slug=slug , is_published=True)
                 serializer = BlogSerializer(blog)
                 comments = Comment.objects.filter(blog=blog , reply_to=None)
                 comments_serializer = CommentSerializer(comments, many=True)
@@ -44,7 +44,7 @@ def get_blog(request, slug=None):
     else:
         cached_data = cache.get('allblogs')
         if cached_data is None:
-            blogs = Blog.objects.filter(is_published=True)
+            blogs = Blog.objects.filter(is_published=True).order_by('-created_at')
             serializer = BlogSerializer(blogs, many=True)
             data = serializer.data
             cache.set('allblogs', data, timeout=100)
@@ -73,6 +73,10 @@ def create_blog(request):
         serializer.save()
         logged_in_user.karma += 10
         logged_in_user.save()
+        blogs = Blog.objects.filter(is_published=True).order_by('-created_at')
+        serializer = BlogSerializer(blogs, many=True)
+        data = serializer.data
+        cache.set('allblogs', data, timeout=100)
         return JsonResponse({
             "data": serializer.data,
             "message": "Blog created successfully"

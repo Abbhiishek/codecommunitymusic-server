@@ -220,13 +220,16 @@ class BlogSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    author = serializers.ReadOnlyField(source='author.username')
+    author = serializers.SerializerMethodField()
     reply_to = serializers.PrimaryKeyRelatedField(queryset=Comment.objects.all(), required=False)
     replies = serializers.SerializerMethodField()
     class Meta:
         model = Comment
         fields = ['id', 'text', 'created_at', 'updated_at', 'author', 'reply_to', 'replies']
-    
+    def get_author(self, chat):
+        author = chat.author
+        serializer = ForumUserSerializer(author)
+        return serializer.data
     def get_replies(self, comment):
         replies = comment.replies.all()
         serializer = CommentSerializer(replies, many=True)
