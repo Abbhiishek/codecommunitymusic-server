@@ -36,7 +36,7 @@ urlpatterns = [
     # projects urls
     path('projects', project, name='projects - GET, POST, PUT, DELETE'),
 
-    path('projects/<str:slug>', project, name='projects - GET, POST, PUT, DELETE'),
+    path('list/projects/<str:slug>', project, name='projects - GET, POST, PUT, DELETE'),
     path('like/project/<str:slug>', likeproject, name='Like project'),
     path('bookmark/project/<str:slug>', bookmarkproject, name='Bookmark project'),
     path('list/projects', allprojects, name='all projects - without auth'),
@@ -44,7 +44,7 @@ urlpatterns = [
 
     # forum urls
     path('forums', fetch_all_forums, name='discussions - GET'),
-    path('forums/<str:slug>', fetch_forum, name='discussions - GET,'),
+    path('list/forums/<str:slug>', fetch_forum, name='discussions - GET,'),
     path('create/forums', create_forum, name='discussions -  POST'),
     path('update/forums/<str:slug>', update_forum, name='discussions -  PUT'),
     path('delete/forums/<str:slug>', delete_forum, name='discussions -  DELETE'),
