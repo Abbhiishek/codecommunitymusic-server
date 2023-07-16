@@ -15,7 +15,7 @@ def get_all_learning_paths(request):
     try:
         cached_learningpaths = cache.get('learningpaths')
         if cached_learningpaths is None:
-            learning_paths = LearningPath.objects.all().order_by('-title' , '-created_at')
+            learning_paths = LearningPath.objects.filter(is_Active=True).order_by('-title' , '-created_at')
             serializer = AllLearningPathSerializer(learning_paths, many=True)
             cache.set('learningpaths', serializer.data , timeout=CACHE_TTL)
             return JsonResponse({
@@ -36,7 +36,7 @@ def get_learning_path(request, slug):
     try:
         cached_learningpath = cache.get('learningpath' + slug)
         if cached_learningpath is None:
-            learning_path = LearningPath.objects.get(slug=slug)
+            learning_path = LearningPath.objects.get(slug=slug , is_Active=True)
             serializer = LearningPathSerializer(learning_path)
             cache.set('learningpath' + slug, serializer.data , timeout=0)
             return JsonResponse({

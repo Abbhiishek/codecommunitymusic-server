@@ -17,7 +17,7 @@ def get_all_Courses(request):
     try:
         cached_courses = cache.get('courses')
         if cached_courses is None:
-            courses = Course.objects.all().order_by('-title' , '-created_at')
+            courses = Course.objects.filter(is_Active=True).order_by('-title' , '-created_at')
             serializer = AllCourseSerializer(courses, many=True)
             cache.set('courses', serializer.data , timeout=0)
             return JsonResponse({
@@ -36,7 +36,7 @@ def get_Course(request, slug):
     try:
         cached_course = cache.get("course"+slug)
         if cached_course is None:
-            course = Course.objects.get(slug=slug)
+            course = Course.objects.get(slug=slug , is_Active=True)
             serializer = CourseSerializer(course, many=False)
             cache.set("course"+slug, serializer.data , timeout=0)
             return JsonResponse({
