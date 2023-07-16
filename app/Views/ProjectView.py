@@ -35,8 +35,6 @@ def allprojects(request, slug=None):
 
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 def project(request, slug=None):
-    token_type, token = request.headers['Authorization'].split(' ')
-    logged_in_user = get_current_user(token)
     if request.method == 'GET':
         if slug:
             try:
@@ -76,6 +74,8 @@ def project(request, slug=None):
                     "server": "cache server v2"
                 }, status=status.HTTP_200_OK)
     elif request.method == 'POST':
+        token_type, token = request.headers['Authorization'].split(' ')
+        logged_in_user = get_current_user(token)
         data = request.data
         data['author'] = logged_in_user.username
         serializer = ProjectSerializer(data=data)
@@ -90,6 +90,8 @@ def project(request, slug=None):
         return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'PUT':
+        token_type, token = request.headers['Authorization'].split(' ')
+        logged_in_user = get_current_user(token)
         # check if project id is provided and the fecth the projecta and check if the user is the author of the project
         if slug:
             try:
@@ -114,6 +116,8 @@ def project(request, slug=None):
             return JsonResponse({'message': 'Please provide the project slug'}, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':
+        token_type, token = request.headers['Authorization'].split(' ')
+        logged_in_user = get_current_user(token)
         if slug:
             try:
                 project = Projects.objects.get(id=slug)

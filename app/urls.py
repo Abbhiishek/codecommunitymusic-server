@@ -9,6 +9,10 @@ from app.Views.LeaderboardView import *
 from app.Views.TodoView import *
 from app.Views.BlogView import *
 from app.Views.ChatView import *
+from app.Views.LearningPathView import *
+from app.Views.CourseView import *
+
+
 urlpatterns = [
     path('routes', getallavailableroutes, name='Get all available routes'),
     path('randomprogrammingquote', getrandomprogrammingquote, name='Get random programming quote'),
@@ -71,4 +75,17 @@ urlpatterns = [
 
     ## leaderboard urls
     path('leaderboard', leaderboard, name='leaderboard - GET'),
+
+
+
+    ## All learningpaths
+
+    path('list/alllearningpaths', get_all_learning_paths, name='learningpaths - GET,'),
+    path('list/learningpath/<str:slug>', get_learning_path, name='learningpaths - GET,'),
+    # path('enroll/learningpath/<str:slug>', enroll_learning_path, name='learningpaths - GET,'),
+
+
+
+    path('list/allcourses', get_all_Courses, name='all courses - GET,'),
+    path('list/courses/<str:slug>', get_Course, name='course - GET,'),
 ]

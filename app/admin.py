@@ -39,3 +39,20 @@ class UserAdmin(admin.ModelAdmin):
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     list_display = ('author', 'created_at', 'updated_at')
+
+
+
+@admin.register(LearningPath)
+class TrackAdmin(admin.ModelAdmin):
+    list_display = ('title', 'created_at', 'updated_at')
+
+
+@admin.register(Course)
+class CourseAdmin(admin.ModelAdmin):
+    list_display = ('title', 'created_at', 'updated_at')
+
+
+
+@admin.register(SubCourse)
+class SubCourseAdmin(admin.ModelAdmin):
+    list_display = ('title', 'created_at', 'updated_at')

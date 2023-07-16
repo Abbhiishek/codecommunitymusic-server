@@ -234,3 +234,105 @@ class CommentSerializer(serializers.ModelSerializer):
         replies = comment.replies.all()
         serializer = CommentSerializer(replies, many=True)
         return serializer.data
+    
+
+
+
+class SubCourseSerializer(serializers.ModelSerializer):
+    """
+    This class is used to serialize the subcourse model
+    """
+    class Meta:
+        # specify the model to use
+        model = SubCourse
+        # specify the fields to be serialized
+        fields = '__all__'
+
+class CourseSerializer(serializers.ModelSerializer):
+    """
+    This class is used to serialize the course model
+    """
+    authors = ForumUserSerializer(many=True)
+    sub_courses = SubCourseSerializer(many=True)
+    students_count = serializers.SerializerMethodField()
+    class Meta:
+        # specify the model to use
+        model = Course
+        # specify the fields to be serialized
+        fields = '__all__'
+
+    def get_students_count(self, course):
+        return course.students.count()
+
+
+
+class AllLearningPathSerializer(serializers.ModelSerializer):
+    """
+    This class is used to serialize the learning path model
+    """
+    courses_count = serializers.SerializerMethodField()
+    students_count = serializers.SerializerMethodField()
+    class Meta:
+        # specify the model to use
+        model = LearningPath
+        # specify the fields to be serialized
+        fields = '__all__'
+
+    def get_courses_count(self, learning_path):
+        return learning_path.courses.count()
+    
+    def get_students_count(self, learning_path):
+        return learning_path.students.count()
+
+class LearningPathSerializer(serializers.ModelSerializer):
+    """
+    This class is used to serialize the learning path model
+    """
+    courses_count = serializers.SerializerMethodField()
+    students_count = serializers.SerializerMethodField()
+    ## order the courses by their order in the learning paths
+    courses = serializers.SerializerMethodField()
+    authors = ForumUserSerializer(many=True)
+    students = ForumUserSerializer(many=True)
+    class Meta:
+        # specify the model to use
+        model = LearningPath
+        # specify the fields to be serialized
+        fields = '__all__'
+    
+    def get_courses_count(self, learning_path):
+        return learning_path.courses.count()
+    
+    def get_students_count(self, learning_path):
+        return learning_path.students.count()
+    
+    def get_courses(self, learning_path):
+        courses = learning_path.courses.all().order_by('-created_at')
+        serializer = CourseSerializer(courses, many=True)
+        return serializer.data
+
+
+
+
+class AllCourseSerializer(serializers.ModelSerializer):
+    """
+    This class is used to serialize the course model
+    """
+    authors = ForumUserSerializer(many=True)
+    students_count = serializers.SerializerMethodField()
+    lessons_count = serializers.SerializerMethodField()
+    class Meta:
+        # specify the model to use
+        model = Course
+        # specify the fields to be serialized
+        fields = '__all__'
+
+    def get_sub_courses_count(self, course):
+        return course.sub_courses.count()
+    
+    def get_students_count(self, course):
+        return course.students.count()
+    
+    def get_lessons_count(self, course):
+        return course.sub_courses.count()
+    
