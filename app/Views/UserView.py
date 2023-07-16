@@ -225,8 +225,7 @@ def forgetpassword(request, email=None):
             try:
                 user = User.objects.get(email=email)
                 otp = random.randint(100000, 999999)
-                user.reset_password_token = otp
-                user.reset_password_token_time = datetime.datetime.now() + datetime.timedelta(minutes=15)
+                user.reset_password_token = str(otp)
                 user.save()
                 send_mail(
                 subject=f'Verify your account {user.username}',
@@ -300,6 +299,23 @@ def updatepassword(request , email=None):
                     hashed_password = make_password(password)
                     user.password = hashed_password
                     user.save()
+                    send_mail(
+                    subject=f'Password updated {user.username}',
+                    from_email=EMAIL_HOST_USER,
+                    recipient_list=[user.email],
+                    fail_silently=False,
+                    message='Password updated',
+                    html_message=f'''
+                    <h1>
+                        Password updated
+                    </h1>
+                    <p>Hi {user.username},</p>
+                    <p>
+                        Your password has been updated successfully.
+                    </p>
+                    <p>Thanks,</p>
+                    <p>The CodeCommunity Music Team</p>
+                    ''')
                     return JsonResponse({
                         'message': 'Password updated successfully ✅',
                         'description': 'Password updated successfully 🥳',
