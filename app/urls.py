@@ -14,6 +14,8 @@ from app.Views.CourseView import *
 
 
 urlpatterns = [
+
+    path('/', statusOk , name="statusOk"),
     path('routes', getallavailableroutes, name='Get all available routes'),
     path('randomprogrammingquote', getrandomprogrammingquote, name='Get random programming quote'),
     

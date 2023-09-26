@@ -2530,6 +2530,12 @@ routes = {
 }
 
 
+@api_view(['GET'])
+def statusOk():
+      return JsonResponse({
+         "message": "success",
+         "data": "server is up and running"
+      }, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 def getallavailableroutes(request):
