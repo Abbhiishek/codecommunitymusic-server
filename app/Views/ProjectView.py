@@ -38,11 +38,11 @@ def project(request, slug=None):
     if request.method == 'GET':
         if slug:
             try:
-                cached_project = cache.get(slug)
+                cached_project = cache.get("project-"+slug)
                 if cached_project is None:
                     project = Projects.objects.get(slug=slug)
                     serializer = ProjectSerializer(project)
-                    cache.set(slug, serializer.data, timeout=2)
+                    cache.set("project-"+slug, serializer.data, timeout=100)
                     return JsonResponse({
                         "data": serializer.data,
                         "messsage": f'Project found successfully with slug {slug}',
@@ -82,6 +82,10 @@ def project(request, slug=None):
         if serializer.is_valid():
             serializer.save()
             logged_in_user.karma += 80
+            logged_in_user.save()
+            projects = Projects.objects.filter(is_published=True).order_by('-created_at')
+            serializer = ProjectSerializer(projects, many=True)
+            cache.set('allprojects', serializer.data, timeout=100)
             return JsonResponse({
                 "status": "success",
                 "data": serializer.data,

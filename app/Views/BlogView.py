@@ -71,7 +71,7 @@ def create_blog(request):
     serializer = CreateBlogSerializer(data=data)
     if serializer.is_valid():
         serializer.save()
-        logged_in_user.karma += 10
+        logged_in_user.karma += 80
         logged_in_user.save()
         blogs = Blog.objects.filter(is_published=True).order_by('-created_at')
         serializer = BlogSerializer(blogs, many=True)
