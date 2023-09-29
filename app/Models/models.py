@@ -1,6 +1,6 @@
 from .Users import User
 from .Forums import Forum
-from .Projects import Projects
+from .Projects import Project
 from .Todos import Todo
 from .Blogs import Blog
 from .Blogs import Comment

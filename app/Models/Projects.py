@@ -3,7 +3,7 @@ from django.contrib.postgres.fields import ArrayField
 from .Users import User
 
 
-class Projects(models.Model):
+class Project(models.Model):
     """
     This class is used to create a project model
     """
