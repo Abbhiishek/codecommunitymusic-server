@@ -1,3 +1,4 @@
 
 core/.env
 .env
+**/__pycache__/
