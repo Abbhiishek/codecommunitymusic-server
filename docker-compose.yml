@@ -1,0 +1,27 @@
+version: '1'
+services:
+  backend-service:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/app  
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+    depends_on:
+      - db
+    environment:
+      DJANGO_SETTINGS_MODULE: core.settings  
+    networks:
+      - my-network
+
+  db:
+    image: postgres:16  
+    environment:
+      POSTGRES_DB: name  
+      POSTGRES_USER: root  
+      POSTGRES_PASSWORD: password  
+    networks:
+      - my-network
+
+networks:
+  my-network:
