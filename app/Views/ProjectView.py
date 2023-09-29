@@ -2,8 +2,8 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from django.http import JsonResponse
 from rest_framework import status
-from app.Models.models import Projects
-from app.serializers import *
+from app.Models.models import Project
+from app.Serializers.ProjectSerializer import *
 from app.libs.oauth2 import get_current_user
 from django.core.cache import cache
 from django.conf import settings
@@ -17,7 +17,7 @@ CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 def allprojects(request, slug=None):
     cached_projects = cache.get('allprojects')
     if cached_projects is None:
-        projects = Projects.objects.all().order_by('-created_at')
+        projects = Project.objects.all().order_by('-created_at')
         serializer = ProjectSerializer(projects, many=True)
         cache.set('allprojects', serializer.data, timeout=200)
         return JsonResponse({
@@ -40,7 +40,7 @@ def project(request, slug=None):
             try:
                 cached_project = cache.get("project-"+slug)
                 if cached_project is None:
-                    project = Projects.objects.get(slug=slug)
+                    project = Project.objects.get(slug=slug)
                     serializer = ProjectSerializer(project)
                     cache.set("project-"+slug, serializer.data, timeout=100)
                     return JsonResponse({
@@ -54,12 +54,12 @@ def project(request, slug=None):
                         "messsage": f'Project found successfully with slug {slug}',
                         "server": "cache server v2"
                     }, status=status.HTTP_200_OK)
-            except Projects.DoesNotExist:
+            except Project.DoesNotExist:
                 return JsonResponse({'message': f'Project not found with the slug {slug}'}, status=status.HTTP_404_NOT_FOUND)
         else:  # if the project id is not provided
             cached_projects = cache.get('allprojects')
             if cached_projects is None:
-                projects = Projects.objects.all()
+                projects = Project.objects.all()
                 serializer = ProjectSerializer(projects, many=True)
                 cache.set('allprojects', serializer.data, timeout=1000)
                 return JsonResponse({
@@ -83,7 +83,7 @@ def project(request, slug=None):
             serializer.save()
             logged_in_user.karma += 80
             logged_in_user.save()
-            projects = Projects.objects.filter(is_published=True).order_by('-created_at')
+            projects = Project.objects.filter(is_published=True).order_by('-created_at')
             serializer = ProjectSerializer(projects, many=True)
             cache.set('allprojects', serializer.data, timeout=100)
             return JsonResponse({
@@ -99,7 +99,7 @@ def project(request, slug=None):
         # check if project id is provided and the fecth the projecta and check if the user is the author of the project
         if slug:
             try:
-                project = Projects.objects.get(id=slug)
+                project = Project.objects.get(id=slug)
                 print(project.author)
                 print(logged_in_user.username)
                 if project.author.username == logged_in_user.username:
@@ -114,7 +114,7 @@ def project(request, slug=None):
                     return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
                 else:
                     return JsonResponse({'message': 'You are not authorized to update this project'}, status=status.HTTP_401_UNAUTHORIZED)
-            except Projects.DoesNotExist:
+            except Project.DoesNotExist:
                 return JsonResponse({'message': f'Project not found with the slug {slug}'}, status=status.HTTP_404_NOT_FOUND)
         else:
             return JsonResponse({'message': 'Please provide the project slug'}, status=status.HTTP_400_BAD_REQUEST)
@@ -124,13 +124,13 @@ def project(request, slug=None):
         logged_in_user = get_current_user(token)
         if slug:
             try:
-                project = Projects.objects.get(id=slug)
+                project = Project.objects.get(id=slug)
                 if project.author.username == logged_in_user.username:
                     project.delete()
                     return JsonResponse({'message': f'Project deleted successfully with id {slug}'}, status=status.HTTP_204_NO_CONTENT)
                 else:
                     return JsonResponse({'message': 'You are not authorized to delete this project'}, status=status.HTTP_401_UNAUTHORIZED)
-            except Projects.DoesNotExist:
+            except Project.DoesNotExist:
                 return JsonResponse({'message': f'Project not found with the id {slug}'}, status=status.HTTP_404_NOT_FOUND)
         else:
             return JsonResponse({'message': 'Please provide the project id'}, status=status.HTTP_400_BAD_REQUEST)
@@ -144,7 +144,7 @@ def listProjectOfUser(request, username=None):
             if user is None:
                 return JsonResponse({'message': f'User not found with the username {username}'}, status=status.HTTP_404_NOT_FOUND)
             
-            projects = Projects.objects.filter(author=user.username)
+            projects = Project.objects.filter(author=user.username)
             serializer = ProjectSerializer(projects, many=True)
             return JsonResponse({
                 "data": serializer.data,
@@ -166,7 +166,7 @@ def likeproject(request, slug=None):
         try:
             token_type, token = request.headers['Authorization'].split(' ')
             logged_in_user = get_current_user(token)
-            project = Projects.objects.get(slug=slug)
+            project = Project.objects.get(slug=slug)
             # check if the user has already liked the project or not
             if logged_in_user.username in project.upvotes.all().values_list('username', flat=True):
                 print("user has already liked this project")
@@ -195,7 +195,7 @@ def likeproject(request, slug=None):
                     "likecount": project.upvotes.count(),
                     "description": "Go to your profile to see your liked projects 👀"
                 }, status=status.HTTP_200_OK)
-        except Projects.DoesNotExist:
+        except Project.DoesNotExist:
             return JsonResponse({'message': f'Project not found with the slug {slug}'}, status=status.HTTP_404_NOT_FOUND)
     else:
         return JsonResponse({'message': 'Please provide the project slug'}, status=status.HTTP_400_BAD_REQUEST)
@@ -208,7 +208,7 @@ def bookmarkproject(request, slug=None):
         try:
             token_type, token = request.headers['Authorization'].split(' ')
             logged_in_user = get_current_user(token)
-            project = Projects.objects.get(slug=slug)
+            project = Project.objects.get(slug=slug)
 
             if logged_in_user.username in project.bookmarks.all().values_list('username', flat=True):
                 project.bookmarks.remove(logged_in_user.username)
@@ -230,7 +230,7 @@ def bookmarkproject(request, slug=None):
                     "bookmarkcount": project.bookmarks.count(),
                     "description": "Go to your profile to see your bookmarked projects 👀"
                 }, status=status.HTTP_200_OK)
-        except Projects.DoesNotExist:
+        except Project.DoesNotExist:
             return JsonResponse({'message': f'Project not found with the slug {slug}'}, status=status.HTTP_404_NOT_FOUND)
     else:
         return JsonResponse({'message': 'Please provide the project slug'}, status=status.HTTP_400_BAD_REQUEST)
@@ -243,7 +243,7 @@ def viewproject(request, slug=None):
         try:
             token_type, token = request.headers['Authorization'].split(' ')
             logged_in_user = get_current_user(token)
-            project = Projects.objects.get(slug=slug)
+            project = Project.objects.get(slug=slug)
 
             if logged_in_user.username in project.views.all().values_list('username', flat=True):
                 return JsonResponse({
@@ -263,7 +263,7 @@ def viewproject(request, slug=None):
                     "likecount": project.views.count(),
                     "description": "Go to your profile to see your viewed projects 👀"
                 }, status=status.HTTP_200_OK)
-        except Projects.DoesNotExist:
+        except Project.DoesNotExist:
             return JsonResponse({'message': f'Project not found with the slug {slug}'}, status=status.HTTP_404_NOT_FOUND)
     else:
         return JsonResponse({'message': 'Please provide the project slug'}, status=status.HTTP_400_BAD_REQUEST)

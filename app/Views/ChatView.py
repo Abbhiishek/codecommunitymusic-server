@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.db.models import Q
 from rest_framework import status
 from app.Models.models import Forum , Chat
-from app.serializers import CreateChatSerializer
+from app.Serializers.ForumSerializer import CreateChatSerializer
 from app.libs.oauth2 import get_current_user
 
 from django.core.cache import cache

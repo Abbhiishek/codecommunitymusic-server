@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.db.models import Q
 from rest_framework import status
 from app.Models.models import Blog , Comment
-from app.serializers import BlogSerializer , CommentSerializer , CreateBlogSerializer
+from app.Serializers.BlogSerializer import BlogSerializer , CommentSerializer , CreateBlogSerializer
 from app.libs.oauth2 import get_current_user
 
 from django.core.cache import cache

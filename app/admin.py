@@ -5,7 +5,7 @@ from django.contrib import admin
 from .Models.models import *
 
 
-@admin.register(Projects)
+@admin.register(Project)
 class ProjectsAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'created_at', 'updated_at')
 

@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.db.models import Q
 from rest_framework import status
 from app.Models.models import Todo
-from app.serializers import TodoSerializer , UpdateTodoSerializer
+from app.Serializers.TodoSerializer import TodoSerializer , UpdateTodoSerializer
 from app.libs.oauth2 import get_current_user
 from django.core.cache import cache
 from django.conf import settings

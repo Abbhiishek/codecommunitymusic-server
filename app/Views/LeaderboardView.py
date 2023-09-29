@@ -5,7 +5,7 @@ from django.conf import settings
 from app.Models.models import User
 from django.core.cache import cache
 
-from app.serializers import LeaderboardSerializer
+from app.Serializers.serializers import LeaderboardSerializer
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 

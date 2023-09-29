@@ -1,7 +1,5 @@
 
-from django.urls import path, include
-
-from app.Views import ImageUploadView
+from django.urls import path
 from .views import *
 from app.Views.LoginSignupView import *
 from app.Views.UserView import *

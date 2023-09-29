@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from django.http import JsonResponse
 from app.libs.oauth2 import get_current_user
-from app.serializers import UserSerializer , AllUserSerializer
+from app.Serializers.UserSerializer import UserSerializer , AllUserSerializer
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
 from django.contrib.auth.hashers import make_password, check_password
 from django.conf import settings
@@ -11,7 +11,6 @@ from app.Models.models import User
 from django.core.cache import cache
 from django.core.mail import send_mail
 from core.settings import EMAIL_HOST_USER
-from django.utils import timezone
 from datetime import datetime
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)

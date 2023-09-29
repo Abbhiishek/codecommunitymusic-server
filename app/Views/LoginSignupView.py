@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from django.http import JsonResponse
 from django.contrib.auth.hashers import make_password, check_password
-from app.serializers import UserSerializer
+from app.Serializers.UserSerializer import UserSerializer
 from app.Models.models import User
 from django.core.mail import send_mail
 from core.settings import EMAIL_HOST_USER
