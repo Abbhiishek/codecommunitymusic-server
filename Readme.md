@@ -72,6 +72,36 @@ git clone https://github.com/Abbhiishek/codecommunitymusic-server.git
 9. Open the development server in your browser at "http://localhost:8000/"
 
 
+
+### Using Docker 
+
+
+1. Clone the repository to your local machine.
+
+```bash
+git clone https://github.com/Abbhiishek/codecommunitymusic-server.git
+```
+
+2. Change into the project directory:
+    
+    ```bash
+    cd codecommunitymusic-server
+    ```
+
+3. Build the docker image:
+
+    ```bash
+    docker compose up
+    ```
+4. Run the docker container:
+
+    ```bash
+    docker run -p 8000:8000 codecommunitymusic-server
+    ```
+5. Open the development server in your browser at "http://localhost:8000/"
+
+
+
 ### SMTP Configuration
 
 This application uses SMTP to send emails, such as account verification and password reset emails. To configure SMTP, follow these steps:

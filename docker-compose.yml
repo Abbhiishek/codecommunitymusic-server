@@ -1,18 +1,25 @@
 version: '1'
 services:
-  backend-service:
+  backend:
     build: .
     ports:
       - "8000:8000"
     volumes:
-      - ./:/app  
-    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+      - ./:/app
+    command:  > 
+      sh -c "
+      python manage.py makemigrations &&
+      python manage.py migrate &&
+      python manage.py runserver  0.0.0.0:8000"
     depends_on:
       - db
     environment:
-      DJANGO_SETTINGS_MODULE: core.settings  
+      DJANGO_SETTINGS_MODULE: core.settings
+      DJANGO_SUPERUSER_USERNAME: admin
+      DJANGO_SUPERUSER_EMAIL: admin@example.com
+      DJANGO_SUPERUSER_PASSWORD: password
     networks:
-      - my-network
+      - codecommunitymusic-network
 
   db:
     image: postgres:16  
@@ -21,7 +28,7 @@ services:
       POSTGRES_USER: root  
       POSTGRES_PASSWORD: password  
     networks:
-      - my-network
+      - codecommunitymusic-network
 
 networks:
-  my-network:
+  codecommunitymusic-network:

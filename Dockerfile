@@ -43,11 +43,13 @@ COPY . /app/
 EXPOSE 8000
 
 
-# do the migration
+COPY entrypoint.sh /entrypoint.sh
 
-# RUN  ["python" , "manage.py" , "makemigrations"]
-# RUN  ["python" , "manage.py" , "migrate"]
-# RUN  ["python" , "manage.py" , "createsuperuser"]
+# Make the entrypoint script executable
+RUN chmod +x /entrypoint.sh
+
+# Set the entrypoint to your custom script
+ENTRYPOINT ["/entrypoint.sh"]
 
 
 # Start the Django application
