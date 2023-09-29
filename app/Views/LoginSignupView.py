@@ -32,7 +32,7 @@ def createuser(request):
                 subject=f'Welcome {serializer.data.get("username")} to CodeCommunityMusic',
                 from_email=EMAIL_HOST_USER,
                 recipient_list=[serializer.data.get("email")],
-                fail_silently=False,
+                fail_silently=True,
                 message='Welcome to CodeCommunityMusic. We are glad to have you here.',
                 html_message=f'''
                 <h4>Hi {serializer.data.get("username")}</h4>
