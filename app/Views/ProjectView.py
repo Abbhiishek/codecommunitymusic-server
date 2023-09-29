@@ -61,7 +61,7 @@ def project(request, slug=None):
             if cached_projects is None:
                 projects = Projects.objects.all()
                 serializer = ProjectSerializer(projects, many=True)
-                cache.set('allprojects', serializer.data, timeout=0)
+                cache.set('allprojects', serializer.data, timeout=1000)
                 return JsonResponse({
                     "data": serializer.data,
                     "message": "success",

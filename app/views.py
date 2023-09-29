@@ -2531,9 +2531,9 @@ routes = {
 
 
 @api_view(['GET'])
-def statusOk():
+def statusOk(request):
       return JsonResponse({
-         "message": "success",
+         "message": "pong 🔔",
          "data": "server is up and running"
       }, status=status.HTTP_200_OK)
 

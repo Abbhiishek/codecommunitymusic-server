@@ -1,5 +1,7 @@
 
 from django.urls import path, include
+
+from app.Views import ImageUploadView
 from .views import *
 from app.Views.LoginSignupView import *
 from app.Views.UserView import *
@@ -15,7 +17,7 @@ from app.Views.CourseView import *
 
 urlpatterns = [
 
-    path('/', statusOk , name="statusOk"),
+    path('ping', statusOk , name="statusOk"),
     path('routes', getallavailableroutes, name='Get all available routes'),
     path('randomprogrammingquote', getrandomprogrammingquote, name='Get random programming quote'),
     
