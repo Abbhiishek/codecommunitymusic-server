@@ -102,6 +102,7 @@ class JWTAuthenticationMiddleware:
         'user/<str:username>/forums',
         '/forums',
         '/static/admin',
+        '/ping'
         # Add other paths that don't require JWT token verification
     ]
 
