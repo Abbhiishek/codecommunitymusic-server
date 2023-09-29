@@ -43,10 +43,8 @@ class User(models.Model):
     banner_pic = models.TextField(
         default="https://img.freepik.com/free-photo/psychedelic-paper-shapes-with-copy-space_23-2149378246.jpg?w=1800&t=st=1685775473~exp=1685776073~hmac=5f072e26cc9a086a94fa84df41dd56e01ba69cdcbf9efd71891a81e6a9059a11")
 
-    followers = models.ManyToManyField(
-        "self", blank=True , related_name="followers" )
-    following = models.ManyToManyField(
-        "self", blank=True , related_name="following")
+    followers = models.ManyToManyField("self", blank=True )
+    following = models.ManyToManyField("self", blank=True)
     is_active = models.BooleanField(default=True)
     is_verified = models.BooleanField(default=False)
     password = models.TextField(max_length=255)

@@ -1,4 +1,4 @@
 
-core/.env
-.env
 **/__pycache__/
+.env.production
+.env
