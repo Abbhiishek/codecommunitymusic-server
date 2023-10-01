@@ -5,4 +5,3 @@ if [ ! -f /app/superuser_created ]; then
 fi
 python manage.py makemigrations
 python manage.py migrate
-python manage.py runserver 0.0.0.0:8000
