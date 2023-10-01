@@ -3,7 +3,7 @@ from app.Models.models import *
 
 
 
-class ShortUserSerializer(serializers.Serializer):
+class ShortUserSerializer(serializers.ModelSerializer):
     """
     schema model for displaying user data in short form 
 
