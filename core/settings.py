@@ -76,7 +76,6 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "https://codecommunitymusic.vercel.app",
     "https://ccm.dscjisu.in",
-    "http://backend:8000"
 ]
 
 
